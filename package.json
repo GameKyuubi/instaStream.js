@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/GameKyuubi/instaStream.js/issues"
   },
-  "homepage": "https://github.com/GameKyuubi/instaStream.js#readme"
+  "homepage": "https://github.com/GameKyuubi/instaStream.js#readme",
+  "dependencies": {
+    "obs-websocket-js": "^5.0.2"
+  }
 }
