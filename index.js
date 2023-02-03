@@ -35,15 +35,21 @@ obs.connect(owsConfig.url, owsConfig.password, identificationParams = {}).then((
         }
         // set to target window
         obs.call("SetInputSettings", settings, true).then((results) => {
-          console.log("settings set");
+          console.log("Target window captured.");
           obs.disconnect();
         }).then(() => { // connect pipewire nodes
           pipewire.createPwThread();
           setTimeout(() => {
             let nodes = pipewire.getNodes();
-            let source = nodes.filter(object => object.name===args[1]);
-            console.log("source ports: " +source[0].ports[0].id);
-            let sink = nodes.filter(object => object.name===obsPWSink);
+            let source = nodes.filter(node => node.name===args[1]);
+            let sink = nodes.filter(node => node.name===obsPWSink);
+            let links = pipewire.getLinks();
+            let obspwlinks = links.filter(link => link.input_node_id===sink[0].id);
+            //delete links beforehand
+            console.log("clearing sink links");
+            for (let i = 0; i < obspwlinks.length; i++) {
+              pipewire.unlinkPorts(obspwlinks[i].input_port_id, obspwlinks[i].output_port_id);
+            }
             if (source[0] != undefined && sink[0] != undefined) {
               console.log("linking " +source[0].name+ " and " +sink[0].name);
               for (let i = 0; i < sink[0].ports.length; i++) {
@@ -53,7 +59,7 @@ obs.connect(owsConfig.url, owsConfig.password, identificationParams = {}).then((
             } else {
               console.log("Error linking audio: source, sink or both not found");
             }
-          },1000);
+          },100);
           //pipewire.getNodes((nodes) => {
           //  console.log("nodes: " +nodes);
           //});
