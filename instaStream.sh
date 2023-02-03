@@ -25,4 +25,5 @@ echo "Helvum is running as PID $helvum_pid."
 
 echo "window_pid: $window_pid, window_name: $window_name, window_class: $window_class"
 
+sleep 1.5
 npm start "$window_name" "$window_class"
