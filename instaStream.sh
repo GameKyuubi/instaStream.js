@@ -24,4 +24,4 @@ echo "Helvum is running as PID $helvum_pid."
 
 echo "window_pid: $window_pid, window_name: $window_name"
 
-npm start
+npm start "$window_name"
