@@ -5,6 +5,7 @@ const owsConfig = config.get('obs-websocket');
 const pipewire = require('node-pipewire');
 
 const obs = new OBSWebSocket();
+const obsPWSink = "PipeWire-OBS";
 
 let options = {
   inputName: 'insta',
@@ -39,7 +40,19 @@ obs.connect(owsConfig.url, owsConfig.password, identificationParams = {}).then((
         }).then(() => { // connect pipewire nodes
           pipewire.createPwThread();
           setTimeout(() => {
-            console.log(pipewire.getNodes());
+            let nodes = pipewire.getNodes();
+            let source = nodes.filter(object => object.name===args[1]);
+            console.log("source ports: " +source[0].ports[0].id);
+            let sink = nodes.filter(object => object.name===obsPWSink);
+            if (source[0] != undefined && sink[0] != undefined) {
+              console.log("linking " +source[0].name+ " and " +sink[0].name);
+              for (let i = 0; i < sink[0].ports.length; i++) {
+                console.log("linking: "+source[0].ports[i].id+ " and " + sink[0].ports[i].id);
+                pipewire.linkPorts(sink[0].ports[i].id, source[0].ports[i].id);
+              }
+            } else {
+              console.log("Error linking audio: source, sink or both not found");
+            }
           },1000);
           //pipewire.getNodes((nodes) => {
           //  console.log("nodes: " +nodes);
