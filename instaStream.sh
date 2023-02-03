@@ -1,6 +1,7 @@
 #!/bin/bash
 window_pid=$(xdotool getwindowfocus getwindowpid)
 window_name=$(xdotool getwindowfocus getwindowname)
+window_class=$(xdotool getwindowfocus getwindowclassname)
 
 unset obs_pid
 obs_pid=$(pidof obs)
@@ -22,6 +23,7 @@ then
 fi
 echo "Helvum is running as PID $helvum_pid."
 
-echo "window_pid: $window_pid, window_name: $window_name"
+echo "window_pid: $window_pid, window_name: $window_name, window_class: $window_class"
 
-npm start
+sleep 1.5
+npm start "$window_name" "$window_class"
